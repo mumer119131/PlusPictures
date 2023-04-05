@@ -1,130 +1,22 @@
-import axios from 'axios'
 import React, {useEffect} from 'react'
 import './gallery.css'
 import {BsFillPlayFill} from 'react-icons/bs'
-import DefaultImage from '../../assets/default.jpg'
+import { getImages, getImagesAndVideos, getVideos } from '../../utils/ApiCalls'
 
 const Gallery = ({selectedResource}) => {
   const [images, setImages] = React.useState([])
-  const query = "nature";
-  const params = {
-    key: import.meta.env.VITE_PIXBAY_KEY,
-    q: query,
-    per_page: 20,
-};
-
-  const getImages = async() => {
-    const pexelImages = await getPexelImages()
-    const unSplashImages = await getUnSplashImages()
-    const concatImages = [...pexelImages, ...unSplashImages]
-    const shuffledImages = concatImages.sort(() => 0.5 - Math.random())
-    setImages(shuffledImages)
-  }
-  const getVideos = async() =>{
-    const pexelVideos = await getPexelVideos()
-    const pixabayVideos = await getPixabayVideos()
-    const concatVideos = [...pexelVideos, ...pixabayVideos]
-    const shuffledVideos = concatVideos.sort(() => 0.5 - Math.random())
-    setImages(shuffledVideos)
-  }
-
-  const getPexelImages = async() => {
-    const data = await axios(`https://api.pexels.com/v1/search?query=${query}`, {headers : {Authorization : import.meta.env.VITE_PEXELS_KEY}})
-    var new_images = []
-    // extract image and user from th data
-    for(let image of data.data.photos){
-      new_images = [...new_images, {
-        image,
-        data : {
-          main_img : image.src.large,
-          user : image.photographer,
-          user_img : DefaultImage,
-          type : 'image',
-          alt_description : image.alt
-        }
-      }]
+  
+  const handleResourceChange = async () => {
+    if (selectedResource === 'Fotos') {
+      setImages(await getImages())
+    }else if(selectedResource == 'Videos'){
+      setImages(await getVideos())
+    }else if(selectedResource == 'Beliebig'){
+      setImages(await getImagesAndVideos())
     }
-    return new_images
-  }
-  const getUnSplashImages = async() => {
-    const data = await axios(`https://api.unsplash.com/photos/?client_id=${import.meta.env.VITE_UNSPLASH_ACCESS_KEY}`)
-    var new_images = []
-    // extract image and user from th data
-    for(let image of data.data){
-      new_images = [...new_images, 
-      {
-        image,
-        data : {
-          main_img : image.urls.regular,
-          user : image.user.name,
-          user_img : image.user.profile_image.small,
-          type : 'image',
-          alt_description : image.alt_description,
-          user_detail : image.user
-        }
-      }]
-    }
-    return new_images
-  }
-
-  const getPexelVideos = async() => {
-    const query = 'nature'
-    const data = await axios(`https://api.pexels.com/videos/search?query=${query}`, {headers : {Authorization : import.meta.env.VITE_PEXELS_KEY}})
-    var new_images = []
-    // extract image and user from th data
-    for(let image of data.data.videos){
-      new_images = [...new_images, {
-        image,
-        data : {
-          main_img : image.image,
-          user : image.user.name,
-          user_img : DefaultImage,
-          type : 'video',
-          alt_description : image.description
-        }
-      }]
-    }
-
-    return new_images
-  }
-  const getPixabayVideos = async() => {
-    const data = await axios(`https://pixabay.com/api/videos/`, {params} )
-    var new_images = []
-    // extract image and user from th data
-    for(let image of data.data.hits){
-      new_images = [...new_images, {
-        image,
-        data : {
-          main_img : `https://i.vimeocdn.com/video/${image.picture_id}_640x360.jpg`,
-          user : image.user,
-          user_img : image.userImageURL,
-          type : 'video',
-          alt_description : image.tags
-        }
-      }]
-    }
-    return new_images
-  }
-
-  const getImagesAndVideos = async() => {
-    const pexelImages = await getPexelImages()
-    const unSplashImages = await getUnSplashImages()
-    const pexelVideos = await getPexelVideos()
-    const pixabayVideos = await getPixabayVideos()
-    const concatImages = [...pexelImages, ...unSplashImages]
-    const concatVideos = [...pexelVideos, ...pixabayVideos]
-    const concatImagesAndVideos = [...concatImages, ...concatVideos]
-    const shuffledImages = concatImagesAndVideos.sort(() => 0.5 - Math.random())
-    setImages(shuffledImages)
   }
   useEffect(()=>{
-    if (selectedResource === 'Fotos') {
-      getImages()
-    }else if(selectedResource == 'Videos'){
-      getVideos()
-    }else if(selectedResource == 'Beliebig'){
-      getImagesAndVideos()
-    }
+    handleResourceChange()
   }, [selectedResource])
   
   return (
