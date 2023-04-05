@@ -1,12 +1,15 @@
 import React from 'react'
 import HeroImage from '../../assets/hero.jpg'
 import {BsSearch} from 'react-icons/bs'
+import { useNavigate } from 'react-router-dom'
+
 const Hero = () => {
     const [popular, setPopular] = React.useState(['People', 'Nature', 'Business & Work', 'Architecture','Food & Drink', 'Animals', 'Art & Culture'])
     const [search, setSearch] = React.useState('')
-
-    const handleSearch = () =>{
-        
+    const navigate = useNavigate()
+    const handleSearch = (e) =>{
+        e.preventDefault()
+        navigate(`/search/${search}`)
     }
   return (
     <div className='h-[50rem] relative w-full'>

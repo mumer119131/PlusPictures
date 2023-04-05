@@ -23,12 +23,13 @@ return new_images
 const getUnSplashImages = async(query, page) => {
     var url = `https://api.unsplash.com/photos/?client_id=${import.meta.env.VITE_UNSPLASH_ACCESS_KEY}`
     if (query){
-        url =  `https://api.unsplash.com/search/photos?query=${searchQuery}&client_id=${import.meta.env.VITE_UNSPLASH_ACCESS_KEY}&page=${page}`
+        url =  `https://api.unsplash.com/search/photos?query=${query}&client_id=${import.meta.env.VITE_UNSPLASH_ACCESS_KEY}&page=${page}`
     }
     const data = await axios(url)
     var new_images = []
+    const images = data.data.results ? data.data.results : data.data
     // extract image and user from th data
-    for(let image of data.data){
+    for(let image of images){
         new_images = [...new_images, 
             {
                 image,
@@ -85,11 +86,11 @@ const getPixabayVideos = async(query = 'nature', page) => {
     return new_images
 }
 
-const getImagesAndVideos = async() => {
-    const pexelImages = await getPexelImages()
-    const unSplashImages = await getUnSplashImages()
-    const pexelVideos = await getPexelVideos()
-    const pixabayVideos = await getPixabayVideos()
+const getImagesAndVideos = async(query, page) => {
+    const pexelImages = await getPexelImages(query, page)
+    const unSplashImages = await getUnSplashImages(query, page)
+    const pexelVideos = await getPexelVideos(query, page)
+    const pixabayVideos = await getPixabayVideos(query, page)
     const concatImages = [...pexelImages, ...unSplashImages]
     const concatVideos = [...pexelVideos, ...pixabayVideos]
     const concatImagesAndVideos = [...concatImages, ...concatVideos]
@@ -97,17 +98,16 @@ const getImagesAndVideos = async() => {
     return shuffledImages
 }
 
-const getImages = async(query) => {
-    const pexelImages = await getPexelImages(query)
-    const unSplashImages = await getUnSplashImages(query)
+const getImages = async(query, page) => {
+    const pexelImages = await getPexelImages(query, page)
+    const unSplashImages = await getUnSplashImages(query, page)
     const concatImages = [...pexelImages, ...unSplashImages]
     const shuffledImages = concatImages.sort(() => 0.5 - Math.random())
     return shuffledImages
   }
-  const getVideos = async(query) =>{
-    const pexelVideos = await getPexelVideos(query)
-    const pixabayVideos = await getPixabayVideos(query)
-    console.log(pexelVideos, pixabayVideos)
+  const getVideos = async(query, page) =>{
+    const pexelVideos = await getPexelVideos(query, page)
+    const pixabayVideos = await getPixabayVideos(query, page)
     const concatVideos = [...pexelVideos, ...pixabayVideos]
     const shuffledVideos = concatVideos.sort(() => 0.5 - Math.random())
     return shuffledVideos

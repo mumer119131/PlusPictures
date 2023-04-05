@@ -3,24 +3,31 @@ import './gallery.css'
 import {BsFillPlayFill} from 'react-icons/bs'
 import { getImages, getImagesAndVideos, getVideos } from '../../utils/ApiCalls'
 
-const Gallery = ({selectedResource}) => {
-  const [images, setImages] = React.useState([])
+const Gallery = ({selectedResource, query, images, setImages, setIsLoading}) => {
+  
   
   const handleResourceChange = async () => {
+    if (setIsLoading){
+      setIsLoading(true)
+    }
     if (selectedResource === 'Fotos') {
-      setImages(await getImages())
+      setImages(await getImages(query))
     }else if(selectedResource == 'Videos'){
-      setImages(await getVideos())
+      setImages(await getVideos(query))
     }else if(selectedResource == 'Beliebig'){
-      setImages(await getImagesAndVideos())
+      setImages(await getImagesAndVideos(query))
+    }
+
+    if (setIsLoading){
+      setIsLoading(false)
     }
   }
   useEffect(()=>{
     handleResourceChange()
-  }, [selectedResource])
+  }, [selectedResource, query])
   
   return (
-    <section className='gallery mt-[2rem]'>
+    <section className='gallery mt-[2rem] mb-[4rem]'>
       {
         images.map((image, index) => {
           return <div className='pics relative group ' key={index}>
