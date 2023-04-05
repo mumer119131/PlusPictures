@@ -1,8 +1,15 @@
 import React from 'react'
+import Gallery from '../../components/Gallery/Gallery'
+import Hero from '../../components/Hero/Hero'
+
+
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <div>
+        <Hero />
+        <Gallery />
+    </div>
   )
 }
 
