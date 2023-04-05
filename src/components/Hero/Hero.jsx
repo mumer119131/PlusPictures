@@ -1,15 +1,15 @@
 import React from 'react'
 import HeroImage from '../../assets/hero.jpg'
 import {BsSearch} from 'react-icons/bs'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const Hero = () => {
     const [popular, setPopular] = React.useState(['People', 'Nature', 'Business & Work', 'Architecture','Food & Drink', 'Animals', 'Art & Culture'])
     const [search, setSearch] = React.useState('')
     const navigate = useNavigate()
-    const handleSearch = (e) =>{
+    const handleSearch = (e, query) =>{
         e.preventDefault()
-        navigate(`/search/${search}`)
+        navigate(`/search/${query}`)
     }
   return (
     <div className='h-[50rem] relative w-full'>
@@ -18,7 +18,7 @@ const Hero = () => {
             <h1 className='absolute top-5 left-5 text-3xl font-bold text-white'>PlusPictures<sup>&reg;</sup></h1>
             <h2 className='text-[3.5rem] font-bold text-white text-center'>Großartige Bilder</h2>
             <h2 className='text-[3.5rem] font-bold text-white text-center'>lizenzfrei & kostenlos</h2>
-            <form onSubmit={handleSearch} className='flex sm:w-[40rem] w-[90%] justify-center mt-[2rem]'>
+            <form onSubmit={()=>handleSearch(query)} className='flex sm:w-[40rem] w-[90%] justify-center mt-[2rem]'>
                 <input type="text" className='w-full p-4 rounded-tl-lg rounded-bl-lg outline-none' placeholder='Suche nach Fotos oder Videos...' value={search} onChange={(e) => setSearch(e.target.value)}/>
                 <div className='bg-white flex items-center justify-center px-4 rounded-tr-lg rounded-br-lg'>
                     <BsSearch className='text-xl'/>
@@ -28,7 +28,7 @@ const Hero = () => {
                 <h2 className='text-white'>Populär: </h2>
                 {
                     popular.map((item, index) => {
-                        return <span className='text-sm text-white py-1 rounded-full mx-1 underline' key={index}>{item},</span>
+                        return <Link to={`/search/${item}`} className='text-sm text-white py-1 rounded-full mx-1 underline' key={index}>{item},</Link>
                     })
                 }
             </div>

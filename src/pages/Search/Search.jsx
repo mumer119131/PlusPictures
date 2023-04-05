@@ -46,7 +46,7 @@ const Search = (props) => {
       }
       {
         isLoading && <div className='flex flex-col items-center'>
-          <div class="lds-hourglass"></div>
+          <div className="lds-hourglass"></div>
           <h3 className='text-center text-primary text-2xl font-bold'>Loading...</h3>
         </div>
       }
