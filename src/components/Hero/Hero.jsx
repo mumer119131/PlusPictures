@@ -16,14 +16,15 @@ const Hero = () => {
                     <BsSearch className='text-xl'/>
                 </div>
             </div>
-            <div className='flex mt-2 items-center'>
-                <h2 className='text-white'>Populär</h2>
+            <div className='flex mt-2 items-center flex-wrap justify-center'>
+                <h2 className='text-white'>Populär: </h2>
                 {
                     popular.map((item, index) => {
-                        return <span className='text-sm font-bold text-white py-1 rounded-full mx-1' key={index}>{item}</span>
+                        return <span className='text-sm text-white py-1 rounded-full mx-1 underline' key={index}>{item},</span>
                     })
                 }
             </div>
+            <h3 className='text-white absolute right-5 bottom-5 text-sm font-thin tracking-wider'><span className='underline'>Aarmin van Dam</span> via <span className='underline'>Pexels</span></h3>
         </section>
     </div>
   )
