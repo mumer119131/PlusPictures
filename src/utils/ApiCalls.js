@@ -1,6 +1,6 @@
 import axios from 'axios'
 import DefaultImage from '../assets/default.jpg'
-
+import randomWords from 'random-words'
 
 const getPhoto = async(id) => {
     if(id.endsWith('us')){
@@ -63,7 +63,7 @@ const getPhoto = async(id) => {
     }
 }
 
-const getPexelImages = async(query = 'nature', page) => {
+const getPexelImages = async(query = randomWords(), page) => {
     const data = await axios(`https://api.pexels.com/v1/search?query=${query}&page=${page}`, {headers : {Authorization : import.meta.env.VITE_PEXELS_KEY}})
     var new_images = []
     // extract image and user from th data
@@ -109,7 +109,7 @@ const getUnSplashImages = async(query, page) => {
 return new_images
 }
 
-const getPexelVideos = async(query = 'nature', page) => {
+const getPexelVideos = async(query = randomWords(), page) => {
     const data = await axios(`https://api.pexels.com/videos/search?query=${query}&page=${page}`, {headers : {Authorization : import.meta.env.VITE_PEXELS_KEY}})
     var new_images = []
     // extract image and user from th data
@@ -129,7 +129,7 @@ const getPexelVideos = async(query = 'nature', page) => {
     
     return new_images
 }
-const getPixabayVideos = async(query = 'nature', page) => {
+const getPixabayVideos = async(query = randomWords(), page) => {
     
     const data = await axios.get(`https://pixabay.com/api/videos/?key=${import.meta.env.VITE_PIXBAY_KEY}&q=${query}&page=${page}&per_page=10`)
     

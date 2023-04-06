@@ -36,19 +36,20 @@ const ImageDetail = ({query, id, image, setImage}) => {
     }
     const goBack = () => {
         navigate(-1);
+        window.location.reload()
     }
   return (
     <div>
         {
             query && <h1 className='text-4xl font-bold mt-[5rem]'>Search Results for "{query}"</h1>
         }
-        <h3 className='flex items-center text-primary font-bold gap-1 mt-2 cursor-pointer' onClick={goBack}><RxDoubleArrowLeft className='inline font-bold' /> Back</h3>
+        {/* <h3 className='flex items-center text-primary font-bold gap-1 mt-2 cursor-pointer' onClick={goBack}><RxDoubleArrowLeft className='inline font-bold' /> Back</h3> */}
         {
             image && 
-            <div className='flex mt-4 flex-wrap'>
+            <div className='flex mt-8 flex-wrap'>
                 {
                     image.data.type === 'image' ? 
-                    <img src={image.data.main_img} className='h-[40rem]' alt="" /> :
+                    <img src={image.data.main_img} className='sm:w-[100%] lg:w-[60%]' alt="" /> :
                                 <video controls className='sm:w-[100%] lg:w-[60%] h-max'>
                                     <source src={image.data.video} type="video/mp4"></source>
                                 </video>
