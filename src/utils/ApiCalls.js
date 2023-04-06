@@ -50,8 +50,9 @@ const getPhoto = async(id) => {
             }}
         }else{
 
+            
             data = {...image.data, data : {
-                main_img : image.data.src.large,
+                main_img : image.data.src[Object.keys(image.data.src)[0]],
                 user : image.data.photographer,
                 user_img : DefaultImage,
                 type : 'image',
@@ -72,17 +73,17 @@ const getPexelImages = async(query = randomWords(), page) => {
             image,
             data : {
                 main_img : image.src.large,
-          user : image.photographer,
-          user_img : DefaultImage,
-          type : 'image',
-          alt_description : image.alt,
-          id : image.id + 'px'
-        }
-    }]
+                user : image.photographer,
+                user_img : DefaultImage,
+                type : 'image',
+                alt_description : image.alt,
+                id : image.id + 'px'
+            }
+        }]
+    }
+    return new_images
 }
-return new_images
-}
-const getUnSplashImages = async(query, page) => {
+const getUnSplashImages = async(query = randomWords(), page) => {
     var url = `https://api.unsplash.com/photos/?client_id=${import.meta.env.VITE_UNSPLASH_ACCESS_KEY}`
     if (query){
         url =  `https://api.unsplash.com/search/photos?query=${query}&client_id=${import.meta.env.VITE_UNSPLASH_ACCESS_KEY}&page=${page}`
