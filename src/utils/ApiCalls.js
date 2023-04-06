@@ -18,26 +18,47 @@ const getPhoto = async(id) => {
     }
         return data
     }else if(id.endsWith('pb')){
-        const image = await axios(`https://pixabay.com/api/?key=${import.meta.env.VITE_PIXBAY_KEY}&id=${id.slice(0, -2)}`)
+        const image = await axios(`https://pixabay.com/api/videos?key=${import.meta.env.VITE_PIXBAY_KEY}&id=${id.slice(0, -2)}`)
+        console.log(image)
         const data = {...image.data.hits[0], data : {
-            main_img : image.data.image,
-            user : image.data.user.name,
-            user_img : DefaultImage,
+            main_img : image.data.hits[0].image,
+            user : image.data.hits[0].user,
+            user_img : image.data.hits[0].userImageURL,
             type : 'video',
-            alt_description : image.data.description,
-            id : image.data.id + 'px'
+            alt_description : image.data.hits[0].description,
+            id : image.data.hits[0].id + 'px',
+            video : image.data.hits[0].videos.large.url
         }}
+        console.log(data)
         return data
     }else if(id.endsWith('px')){
-        const image = await axios(`https://api.pexels.com/v1/photos/${id.slice(0, -2)}`, {headers : {Authorization : import.meta.env.VITE_PEXELS_KEY}})
-        const data = {...image.data, data : {
-            main_img : image.data.src.large,
-            user : image.data.photographer,
-            user_img : DefaultImage,
-            type : 'image',
-            alt_description : image.data.alt,
-            id : image.data.id + 'px'
-        }}
+        var image = null
+        try{
+            image = await axios(`https://api.pexels.com/v1/photos/${id.slice(0, -2)}`, {headers : {Authorization : import.meta.env.VITE_PEXELS_KEY}})
+        }catch{
+            image = await axios(`https://api.pexels.com/videos/videos/${id.slice(0, -2)}`, {headers : {Authorization : import.meta.env.VITE_PEXELS_KEY}})
+        }
+        var data = []
+        if(image.data.video_files){
+            data = {...image.data, data : {
+                user : image.data.user.name,
+                user_img : DefaultImage,
+                type : 'video',
+                alt_description : image.data.description,
+                id : image.data.id + 'px',
+                video : image.data.video_files[0].link
+            }}
+        }else{
+
+            data = {...image.data, data : {
+                main_img : image.data.src.large,
+                user : image.data.photographer,
+                user_img : DefaultImage,
+                type : 'image',
+                alt_description : image.data.alt,
+                id : image.data.id + 'px',
+            }}
+        }
         return data
     }
 }
