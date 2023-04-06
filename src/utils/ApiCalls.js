@@ -5,9 +5,9 @@ import DefaultImage from '../assets/default.jpg'
 const getPhoto = async(id) => {
     if(id.endsWith('us')){
         const image = await axios(`https://api.unsplash.com/photos/${id.slice(0, -2)}?client_id=${import.meta.env.VITE_UNSPLASH_ACCESS_KEY}`)
-        
+       
         const data = {...image.data, data : {
-            main_img : image.data.urls.regular,
+            main_img : image.data.urls.full,
             user : image.data.user.name,
             user_img : image.data.user.profile_image.small,
             type : 'image',

@@ -2,10 +2,13 @@ import React from 'react'
 import {RxDoubleArrowLeft} from 'react-icons/rx'
 import { getPhoto } from '../../utils/ApiCalls'
 import SmallGallery from '../SmallGallery/SmallGallery'
+import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-const ImageDetail = ({query, id, image, setImage}) => {
 
+const ImageDetail = ({query, id, image, setImage}) => {
+    const [status, setStatus] = React.useState('')
     const [galleryImages, setGalleryImages] = React.useState([])
+    const navigate = useNavigate()
     const getImage = async () => {
         const newImage = await getPhoto(id)
         setImage(newImage)
@@ -13,12 +16,33 @@ const ImageDetail = ({query, id, image, setImage}) => {
     React.useEffect(() => {
         getImage()
     }, [])
+    function downloadImage(url) {
+        setStatus('Downloading...')
+        axios({
+          url: image.data.main_img ? image.data.main_img : image.data.video,
+          method: 'GET',
+          responseType: 'blob'
+        }).then(response => {
+          const objectUrl = URL.createObjectURL(response.data);
+          const link = document.createElement('a');
+          link.href = objectUrl;
+          link.download = `${id}.${image.data.type==='image' ? 'jpg' : 'mp4'}`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(objectUrl);
+          setStatus('Downloaded')
+        }).catch(error => console.error(error));
+    }
+    const goBack = () => {
+        navigate(-1);
+    }
   return (
     <div>
         {
             query && <h1 className='text-4xl font-bold mt-[5rem]'>Search Results for "{query}"</h1>
         }
-        <h3 className='flex items-center text-primary font-bold gap-1 mt-2'><RxDoubleArrowLeft className='inline font-bold' /> Back</h3>
+        <h3 className='flex items-center text-primary font-bold gap-1 mt-2 cursor-pointer' onClick={goBack}><RxDoubleArrowLeft className='inline font-bold' /> Back</h3>
         {
             image && 
             <div className='flex mt-4 flex-wrap'>
@@ -40,10 +64,13 @@ const ImageDetail = ({query, id, image, setImage}) => {
                             <h2 className='text-xs'>1214 Pictures</h2>
                         </div>
                     </div>
-                    <button className='bg-primary text-white mt-4 px-12 py-2 rounded-full'>Free Download</button>
-                    <h2 className=' font-semibold text-2xl mt-6 mb-4'>Other free Images</h2>
+                    {
+                        status && <h2 className='text-sm px-14 mt-2 text-primary'>{status}</h2>
+                    }
+                    <button onClick={downloadImage} className='bg-primary mt-2 text-white px-12 py-2 rounded-full'>Free Download</button>
+                    <h2 className=' font-semibold text-2xl mt-6 mb-4'>Other free {image.data.type === 'image' ? 'Images' : 'Videos'}</h2>
                     <SmallGallery images={galleryImages} setImages={setGalleryImages} selectedResource={image.data.type == 'image' ? 'Fotos' : 'Videos'}/>
-                    <h2 className='underline mt-4 text-sm'>See more free pictures on pexels.com</h2>
+                    <a href='https://www.pexels.com' target='_blank' className='underline mt-4 text-sm'>See more free pictures on pexels.com</a>
                 </div>
             </div>
         }
