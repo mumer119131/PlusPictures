@@ -36,6 +36,7 @@ const Search = (props) => {
     setIsLoading(false)
   }
   return (
+    <>
     <section>
       <SearchNav />
       <h1 className='text-4xl text-center font-bold mt-[5rem]'>Search Results for "{query}"</h1>
@@ -50,8 +51,9 @@ const Search = (props) => {
           <h3 className='text-center text-primary text-2xl font-bold'>Loading...</h3>
         </div>
       }
-      <Footer />
     </section>
+      <Footer />
+      </>
   )
 }
 

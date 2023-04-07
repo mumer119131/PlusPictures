@@ -4,6 +4,7 @@ import SearchNav from '../../components/SearchNav/SearchNav'
 import ImageDetail from '../../components/ImageDetail/ImageDetail'
 import Gallery from '../../components/Gallery/Gallery'
 import Footer from '../../components/Footer/Footer'
+import getRandom  from 'random-words'
 
 const Detail = () => {
     const { id } = useParams()
@@ -19,11 +20,12 @@ const Detail = () => {
         query = null
     }
     return (
+    <>
         <section className='px-4'>
             <SearchNav />
             <ImageDetail query={query} id={id} image={image} setImage={setImage}/>
             {
-            image && <h1 className='text-4xl font-bold mt-[2rem]'>{query ? `Other ${image.data.type == 'image' ? 'Images' : 'Videos'} for "${query}"` : 'Other Images'}</h1>
+                image && <h1 className='text-4xl font-bold mt-[2rem]'>{query ? `Other ${image.data.type == 'image' ? 'Images' : 'Videos'} for "${query}"` : `Other ${image.data.type == 'image' ? 'Images' : 'Videos'}`}</h1>
             }
             <div className='flex mt-2 items-center flex-wrap'>
                 <h2 className='font-bold'>Populär: </h2>
@@ -34,10 +36,11 @@ const Detail = () => {
                 }
             </div>
             {
-                image && <Gallery images={images} setImages={setImages} selectedResource={image.data.type == 'image' ? 'Fotos' : 'Videos'} query={query ? query : null}/>
+                image && <Gallery images={images} setImages={setImages} selectedResource={image.data.type == 'image' ? 'Fotos' : 'Videos'} query={query ? query : ''}/>
             }
-            <Footer />
         </section>
+            <Footer />
+            </>
   )
 }
 

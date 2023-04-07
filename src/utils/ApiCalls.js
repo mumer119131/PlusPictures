@@ -19,7 +19,13 @@ const getPhoto = async(id) => {
         return data
     }else if(id.endsWith('pb')){
         const image = await axios(`https://pixabay.com/api/videos?key=${import.meta.env.VITE_PIXBAY_KEY}&id=${id.slice(0, -2)}`)
-        console.log(image)
+        // get all the video sizes
+        var video_sizes = []
+
+        const videos = image.data.hits[0].videos
+        for(let video of Object.keys(videos)){
+            video_sizes = [...video_sizes, {quality : video, link : videos[video].url}]
+        }
         const data = {...image.data.hits[0], data : {
             main_img : image.data.hits[0].image,
             user : image.data.hits[0].user,
@@ -27,9 +33,8 @@ const getPhoto = async(id) => {
             type : 'video',
             alt_description : image.data.hits[0].description,
             id : image.data.hits[0].id + 'px',
-            video : image.data.hits[0].videos.large.url
+            video : video_sizes
         }}
-        console.log(data)
         return data
     }else if(id.endsWith('px')){
         var image = null
@@ -39,14 +44,27 @@ const getPhoto = async(id) => {
             image = await axios(`https://api.pexels.com/videos/videos/${id.slice(0, -2)}`, {headers : {Authorization : import.meta.env.VITE_PEXELS_KEY}})
         }
         var data = []
+        var qualities = []
         if(image.data.video_files){
+            // get all the video sizes
+            var video_sizes = []
+            for(let video of image.data.video_files){
+                if (qualities.includes(video.quality)){
+                    continue
+                }
+                qualities = [...qualities, video.quality]
+                video_sizes = [...video_sizes, {quality : video.quality, link : video.link}]
+            }
+            if (video_sizes[0].quality === 'sd'){
+                video_sizes = [video_sizes[1], video_sizes[0]]
+            }
             data = {...image.data, data : {
                 user : image.data.user.name,
                 user_img : DefaultImage,
                 type : 'video',
                 alt_description : image.data.description,
                 id : image.data.id + 'px',
-                video : image.data.video_files[0].link
+                video : video_sizes
             }}
         }else{
 
@@ -64,7 +82,10 @@ const getPhoto = async(id) => {
     }
 }
 
-const getPexelImages = async(query = randomWords(), page) => {
+const getPexelImages = async(query, page) => {
+    if (!query){
+        query = randomWords()
+    }
     const data = await axios(`https://api.pexels.com/v1/search?query=${query}&page=${page}`, {headers : {Authorization : import.meta.env.VITE_PEXELS_KEY}})
     var new_images = []
     // extract image and user from th data
@@ -111,6 +132,9 @@ return new_images
 }
 
 const getPexelVideos = async(query = randomWords(), page) => {
+    if(!query){
+        query = randomWords()
+    }
     const data = await axios(`https://api.pexels.com/videos/search?query=${query}&page=${page}`, {headers : {Authorization : import.meta.env.VITE_PEXELS_KEY}})
     var new_images = []
     // extract image and user from th data
@@ -127,7 +151,6 @@ const getPexelVideos = async(query = randomWords(), page) => {
             }
       }]
     }
-    
     return new_images
 }
 const getPixabayVideos = async(query = randomWords(), page) => {
@@ -171,12 +194,12 @@ const getImages = async(query, page) => {
     const shuffledImages = concatImages.sort(() => 0.5 - Math.random())
     return shuffledImages
   }
-  const getVideos = async(query, page) =>{
-    const pexelVideos = await getPexelVideos(query, page)
-    const pixabayVideos = await getPixabayVideos(query, page)
-    const concatVideos = [...pexelVideos, ...pixabayVideos]
-    const shuffledVideos = concatVideos.sort(() => 0.5 - Math.random())
-    return shuffledVideos
-  }
+const getVideos = async(query, page) =>{
+const pexelVideos = await getPexelVideos(query, page)
+const pixabayVideos = await getPixabayVideos(query, page)
+const concatVideos = [...pexelVideos, ...pixabayVideos]
+const shuffledVideos = concatVideos.sort(() => 0.5 - Math.random())
+return shuffledVideos
+}
 
 export {getImages, getVideos, getImagesAndVideos, getPhoto}

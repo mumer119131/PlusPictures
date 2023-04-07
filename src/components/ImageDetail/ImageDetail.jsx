@@ -8,9 +8,13 @@ import { useNavigate } from 'react-router-dom'
 const ImageDetail = ({query, id, image, setImage}) => {
     const [status, setStatus] = React.useState('')
     const [galleryImages, setGalleryImages] = React.useState([])
+    const [videoQuality, setVideoQuality] = React.useState(null)
     const navigate = useNavigate()
     const getImage = async () => {
         const newImage = await getPhoto(id)
+        if (newImage.data.type === 'video') {
+            setVideoQuality(newImage.data.video[0])
+        }
         setImage(newImage)
     }
     React.useEffect(() => {
@@ -19,7 +23,7 @@ const ImageDetail = ({query, id, image, setImage}) => {
     function downloadImage(url) {
         setStatus('Downloading...')
         axios({
-          url: image.data.main_img ? image.data.main_img : image.data.video,
+          url: image.data.main_img ? image.data.main_img : videoQuality.link,
           method: 'GET',
           responseType: 'blob'
         }).then(response => {
@@ -51,7 +55,11 @@ const ImageDetail = ({query, id, image, setImage}) => {
                     image.data.type === 'image' ? 
                     <img src={image.data.main_img} className='sm:w-[100%] lg:w-[60%]' alt="" /> :
                                 <video controls className='sm:w-[100%] lg:w-[60%] h-max'>
-                                    <source src={image.data.video} type="video/mp4"></source>
+                                    {
+                                        image.data.video.map((video, index) => {
+                                            return <source src={video.link} key={index} type="video/mp4" />
+                                        })
+                                    }
                                 </video>
                     
                 }
@@ -69,6 +77,14 @@ const ImageDetail = ({query, id, image, setImage}) => {
                         status && <h2 className='text-sm px-14 mt-2 text-primary'>{status}</h2>
                     }
                     <button onClick={downloadImage} className='bg-primary mt-2 text-white px-12 py-2 rounded-full'>Free Download</button>
+                    <h2 className='mt-2 font-bold'>Select Video Quality : <br /></h2>
+                    <div className='flex flex-wrap gap-2 '>
+                        {
+                            image.data.type === 'video' && image.data.video.map((video, index) => {
+                                return <span key={index} className={` text-white px-4 rounded-full cursor-pointer ${video.quality === videoQuality.quality ? 'bg-primary' : 'bg-secondary'}`} onClick={()=> setVideoQuality(video)}>{video.quality}</span>
+                            })
+                        }
+                    </div>
                     <h2 className=' font-semibold text-2xl mt-6 mb-4'>Other free {image.data.type === 'image' ? 'Images' : 'Videos'}</h2>
                     <SmallGallery images={galleryImages} setImages={setGalleryImages} selectedResource={image.data.type == 'image' ? 'Fotos' : 'Videos'}/>
                     <a href='https://www.pexels.com' target='_blank' className='underline mt-4 text-sm'>See more free pictures on pexels.com</a>
