@@ -39,8 +39,10 @@ const Search = (props) => {
     <>
     <section>
       <SearchNav />
-      <h1 className='text-4xl text-center font-bold mt-[5rem]'>Search Results for "{query}"</h1>
-      <ResourceSelector selectedResource={selectedResource} setSelectedResource={setSelectedResource} />
+      <h1 className='text-4xl text-center font-bold mt-[5rem]'>{!isLoading && images.length == 0 && 'No '}Search Results for "{query}"</h1>
+      {
+        images.length != 0 && <ResourceSelector selectedResource={selectedResource} setSelectedResource={setSelectedResource} />
+      }
       <Gallery selectedResource={selectedResource} query={query} images={images} setImages={setImages} setIsLoading={setIsLoading} />
       {
         images.length > 0 && !isLoading && <button onClick={loadMore} className='mb-[5rem] mx-auto block relative bg-primary text-white px-12 py-2 rounded-lg'>Load more</button>

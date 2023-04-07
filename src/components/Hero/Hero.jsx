@@ -9,6 +9,7 @@ const Hero = () => {
     const navigate = useNavigate()
     const handleSearch = (e) =>{
         e.preventDefault()
+        if (search == null || search.trim() === '') return
         navigate(`/search/${search}`)
     }
   return (
@@ -20,9 +21,9 @@ const Hero = () => {
             <h2 className='text-[3.5rem] font-bold text-white text-center'>lizenzfrei & kostenlos</h2>
             <form onSubmit={handleSearch} className='flex sm:w-[40rem] w-[90%] justify-center mt-[2rem]'>
                 <input type="text" className='w-full p-4 rounded-tl-lg rounded-bl-lg outline-none' placeholder='Suche nach Fotos oder Videos...' value={search} onChange={(e) => setSearch(e.target.value)}/>
-                <Link to={`/search/${search}`} className='bg-white flex items-center justify-center px-4 rounded-tr-lg rounded-br-lg'>
+                <div onClick={handleSearch} className='bg-white flex items-center justify-center px-4 rounded-tr-lg rounded-br-lg'>
                     <BsSearch className='text-xl'/>
-                </Link>
+                </div>
             </form>
             <div className='flex mt-2 items-center flex-wrap justify-center'>
                 <h2 className='text-white'>Populär: </h2>

@@ -7,6 +7,7 @@ const SearchNav = () => {
     const navigate = useNavigate()
     const handleSearch = (e) =>{
         e.preventDefault()
+        if (search == null || search.trim() === '') return
         navigate(`/search/${search}`)
       }
   return (
@@ -16,8 +17,8 @@ const SearchNav = () => {
         </Link>
         <form onSubmit={handleSearch} className='flex sm:w-[40rem] w-[100%] justify-center'>
                 <input type="text" className='w-full bg-primaryLight px-4 py-2 rounded-tl-lg rounded-bl-lg outline-none' placeholder='Suche nach Fotos oder Videos...' value={search} onChange={(e) => setSearch(e.target.value)}/>
-                <div className='bg-primaryLight flex items-center justify-center px-4 rounded-tr-lg rounded-br-lg'>
-                    <BsSearch className='text-xl'/>
+                <div onClick={handleSearch} className='bg-primaryLight flex items-center justify-center px-4 rounded-tr-lg rounded-br-lg'>
+                    <BsSearch className='text-xl cursor-pointer'/>
                 </div>
         </form>
     </nav>
