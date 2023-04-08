@@ -16,7 +16,7 @@ const Hero = () => {
     <div className='h-[50rem] relative w-full'>
         <img src={HeroImage} alt='hero' className='z-[-1] w-full h-[50rem] absolute object-cover brightness-[80%]' />
         <section className='flex items-center justify-center h-full flex-col relative'>
-            <h1 className='absolute top-5 left-5 text-3xl font-bold text-white'>PlusPictures<sup>&reg;</sup></h1>
+            <h1 className='absolute top-5 left-5 text-3xl font-bold text-white'>PlusPictures<sup className='font-thin'>&reg;</sup></h1>
             <h2 className='text-[3.5rem] font-bold text-white text-center'>Großartige Bilder</h2>
             <h2 className='text-[3.5rem] font-bold text-white text-center'>lizenzfrei & kostenlos</h2>
             <form onSubmit={handleSearch} className='flex sm:w-[40rem] w-[90%] justify-center mt-[2rem]'>
