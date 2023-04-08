@@ -4,7 +4,6 @@ import SearchNav from '../../components/SearchNav/SearchNav'
 import ImageDetail from '../../components/ImageDetail/ImageDetail'
 import Gallery from '../../components/Gallery/Gallery'
 import Footer from '../../components/Footer/Footer'
-import getRandom  from 'random-words'
 
 const Detail = () => {
     const { id } = useParams()

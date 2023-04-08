@@ -16,73 +16,75 @@ const getPhoto = async(id) => {
            url : image.data.links.html
         }
     }
-    return data
-}else if(id.endsWith('pb')){
-    const image = await axios(`https://pixabay.com/api/videos?key=${import.meta.env.VITE_PIXBAY_KEY}&id=${id.slice(0, -2)}`)
-    // get all the video sizes
-    var video_sizes = []
-    
-    const videos = image.data.hits[0].videos
-    for(let video of Object.keys(videos)){
-        video_sizes = [...video_sizes, {quality : video, link : videos[video].url}]
-    }
-    const data = {...image.data.hits[0], data : {
-        main_img : image.data.hits[0].image,
-        user : image.data.hits[0].user,
-        user_img : image.data.hits[0].userImageURL,
-        type : 'video',
-        alt_description : image.data.hits[0].description,
-        id : image.data.hits[0].id + 'px',
-        video : video_sizes,
-        url : image.data.hits[0].pageURL
-    }}
-    return data
-}else if(id.endsWith('px')){
-    var image = null
-    try{
-        image = await axios(`https://api.pexels.com/v1/photos/${id.slice(0, -2)}`, {headers : {Authorization : import.meta.env.VITE_PEXELS_KEY}})
-    }catch{
-        image = await axios(`https://api.pexels.com/videos/videos/${id.slice(0, -2)}`, {headers : {Authorization : import.meta.env.VITE_PEXELS_KEY}})
-    }
-    var data = []
-    var qualities = []
-    if(image.data.video_files){
-            // get all the video sizes
-            var video_sizes = []
-            for(let video of image.data.video_files){
-                if (qualities.includes(video.quality)){
-                    continue
-                }
-                qualities = [...qualities, video.quality]
-                video_sizes = [...video_sizes, {quality : video.quality, link : video.link}]
-            }
-            if (video_sizes[0].quality === 'sd'){
-                video_sizes = [video_sizes[1], video_sizes[0]]
-            }
-            data = {...image.data, data : {
-                user : image.data.user.name,
-                user_img : DefaultImage,
-                type : 'video',
-                alt_description : image.data.description,
-                id : image.data.id + 'px',
-                video : video_sizes,
-                url : image.data.url
-            }}
-        }else{
-
-            
-            data = {...image.data, data : {
-                main_img : image.data.src[Object.keys(image.data.src)[0]],
-                user : image.data.photographer,
-                user_img : DefaultImage,
-                type : 'image',
-                alt_description : image.data.alt,
-                id : image.data.id + 'px',
-                url : image.data.url
-            }}
-        }
         return data
-    }
+
+    }else if(id.endsWith('pb')){
+        const image = await axios(`https://pixabay.com/api/videos?key=${import.meta.env.VITE_PIXBAY_KEY}&id=${id.slice(0, -2)}`)
+        // get all the video sizes
+        var video_sizes = []
+        
+        const videos = image.data.hits[0].videos
+        for(let video of Object.keys(videos)){
+            video_sizes = [...video_sizes, {quality : video, link : videos[video].url}]
+        }
+        const data = {...image.data.hits[0], data : {
+            main_img : image.data.hits[0].image,
+            user : image.data.hits[0].user,
+            user_img : image.data.hits[0].userImageURL,
+            type : 'video',
+            alt_description : image.data.hits[0].description,
+            id : image.data.hits[0].id + 'px',
+            video : video_sizes,
+            url : image.data.hits[0].pageURL
+        }}
+        return data
+
+    }else if(id.endsWith('px')){
+        var image = null
+        try{
+            image = await axios(`https://api.pexels.com/v1/photos/${id.slice(0, -2)}`, {headers : {Authorization : import.meta.env.VITE_PEXELS_KEY}})
+        }catch{
+            image = await axios(`https://api.pexels.com/videos/videos/${id.slice(0, -2)}`, {headers : {Authorization : import.meta.env.VITE_PEXELS_KEY}})
+        }
+        var data = []
+        var qualities = []
+        if(image.data.video_files){
+                // get all the video sizes
+                var video_sizes = []
+                for(let video of image.data.video_files){
+                    if (qualities.includes(video.quality)){
+                        continue
+                    }
+                    qualities = [...qualities, video.quality]
+                    video_sizes = [...video_sizes, {quality : video.quality, link : video.link}]
+                }
+                if (video_sizes[0].quality === 'sd'){
+                    video_sizes = [video_sizes[1], video_sizes[0]]
+                }
+                data = {...image.data, data : {
+                    user : image.data.user.name,
+                    user_img : DefaultImage,
+                    type : 'video',
+                    alt_description : image.data.description,
+                    id : image.data.id + 'px',
+                    video : video_sizes,
+                    url : image.data.url
+                }}
+            }else{
+
+                
+                data = {...image.data, data : {
+                    main_img : image.data.src[Object.keys(image.data.src)[0]],
+                    user : image.data.photographer,
+                    user_img : DefaultImage,
+                    type : 'image',
+                    alt_description : image.data.alt,
+                    id : image.data.id + 'px',
+                    url : image.data.url
+                }}
+            }
+            return data
+        }
 }
 
 const getPexelImages = async(query, page) => {
@@ -133,10 +135,10 @@ const getUnSplashImages = async(query = randomWords(), page) => {
                     alt_description : image.alt_description,
                     user_detail : image.user,
                     id : image.id + 'us'
-        }
-    }]
-}
-return new_images
+            }
+        }]
+    }
+    return new_images
 }
 
 const getPexelVideos = async(query = randomWords(), page) => {
@@ -203,11 +205,11 @@ const getImages = async(query, page) => {
     return shuffledImages
   }
 const getVideos = async(query, page) =>{
-const pexelVideos = await getPexelVideos(query, page)
-const pixabayVideos = await getPixabayVideos(query, page)
-const concatVideos = [...pexelVideos, ...pixabayVideos]
-const shuffledVideos = concatVideos.sort(() => 0.5 - Math.random())
-return shuffledVideos
+    const pexelVideos = await getPexelVideos(query, page)
+    const pixabayVideos = await getPixabayVideos(query, page)
+    const concatVideos = [...pexelVideos, ...pixabayVideos]
+    const shuffledVideos = concatVideos.sort(() => 0.5 - Math.random())
+    return shuffledVideos
 }
 
 export {getImages, getVideos, getImagesAndVideos, getPhoto}
