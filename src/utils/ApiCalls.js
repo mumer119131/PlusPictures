@@ -51,7 +51,7 @@ const getPhoto = async (id) => {
         id: image.data.hits[0].id + "px",
         video: video_sizes,
         url: image.data.hits[0].pageURL,
-        user_url: image.data.hits[0].userURL,
+        user_url: "https://pixabay.com/users/" + image.data.hits[0].user,
       },
     };
     return data;

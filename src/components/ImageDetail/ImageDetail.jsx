@@ -58,11 +58,14 @@ const ImageDetail = ({ query, id, image, setImage, setAlt }) => {
           {image.data.type === "image" ? (
             <img
               src={image.data.main_img}
-              className="sm:w-[100%] lg:w-[60%]"
+              className="sm:max-w-[100%] lg:max-w-[60%] h-[40rem]"
               alt=""
             />
           ) : (
-            <video controls className="sm:w-[100%] lg:w-[60%] h-max">
+            <video
+              controls
+              className="sm:max-w-[100%] lg:max-w-[60%] h-[40rem]"
+            >
               {image.data.video.map((video, index) => {
                 return <source src={video.link} key={index} type="video/mp4" />;
               })}
@@ -104,11 +107,22 @@ const ImageDetail = ({ query, id, image, setImage, setAlt }) => {
               query={image.data.alt}
             />
             <a
-              href="https://www.pexels.com"
+              href={
+                image.data.id.slice(-2) === "us"
+                  ? "https://www.unsplash.com"
+                  : image.data.id.slice(-2) === "px"
+                  ? "https://www.pexels.com"
+                  : "https://www.pixabay.com"
+              }
               target="_blank"
               className="underline mt-4 text-sm"
             >
-              See more free pictures on pexels.com
+              See more free pictures on{" "}
+              {image.data.id.slice(-2) === "us"
+                ? "www.unsplash.com"
+                : image.data.id.slice(-2) === "px"
+                ? "www.pexels.com"
+                : "www.pixabay.com"}
             </a>
           </div>
         </div>
