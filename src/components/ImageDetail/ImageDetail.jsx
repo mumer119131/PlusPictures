@@ -58,13 +58,13 @@ const ImageDetail = ({ query, id, image, setImage, setAlt }) => {
           {image.data.type === "image" ? (
             <img
               src={image.data.main_img}
-              className="sm:max-w-[100%] lg:max-w-[60%] h-[40rem]"
+              className="sm:max-w-[100%] lg:max-w-[70%] max-h-[40rem]"
               alt=""
             />
           ) : (
             <video
               controls
-              className="sm:max-w-[100%] lg:max-w-[60%] h-[40rem]"
+              className="sm:max-w-[100%] lg:max-w-[70%] max-h-[40rem]"
             >
               {image.data.video.map((video, index) => {
                 return <source src={video.link} key={index} type="video/mp4" />;
