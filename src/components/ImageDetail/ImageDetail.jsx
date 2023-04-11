@@ -84,10 +84,9 @@ const ImageDetail = ({ query, id, image, setImage, setAlt }) => {
               />
 
               <div>
-                <h2 className="text-sm">
+                <h2 className="text-md">
                   <b>{image.data.user}</b>
                 </h2>
-                <h2 className="text-xs">1214 Pictures</h2>
               </div>
             </a>
             <a
