@@ -10,6 +10,7 @@ const Hero = () => {
     const [search, setSearch] = React.useState('')
     const [searchOptions, setSearchOptions] = React.useState([])
     const navigate = useNavigate()
+    const [isSuggestionsOpen, setIsSuggestionsOpen] = React.useState(false)
     const handleSearch = (e) =>{
         e.preventDefault()
         if (search == null || search.trim() === '') return
@@ -24,12 +25,17 @@ const Hero = () => {
             const filtered = commonWords.filter((item) => {
                 return item.toLowerCase().startsWith(search.toLowerCase())
             })
-
+            setIsSuggestionsOpen(true)
             filtered.length > 5 ? setSearchOptions(filtered.slice(0, 5)) : setSearchOptions(filtered)
         }else{
             setSearchOptions([])
+            setIsSuggestionsOpen(false)
         }
       },[search])
+    const resetSuggestions = () =>{
+        setSearchOptions([])
+        setIsSuggestionsOpen(false)
+    }
   return (
     <div className='h-[50rem] relative w-full'>
         <img src={HeroImage} alt='hero' className='z-[-1] w-full h-[50rem] absolute object-cover brightness-[80%]' />
@@ -38,12 +44,12 @@ const Hero = () => {
             <h2 className='text-[3.5rem] font-bold text-white text-center'>Großartige Bilder</h2>
             <h2 className='text-[3.5rem] font-bold text-white text-center'>lizenzfrei & kostenlos</h2>
             <form onSubmit={handleSearch} className='flex sm:w-[40rem] w-[90%] justify-center mt-[2rem] relative'>
-                <input type="text" className={`w-full p-4 rounded-tl-lg ${!searchOptions.length > 0 && 'rounded-bl-lg'} outline-none`} placeholder='Suche nach Fotos oder Videos...' value={search} onChange={(e) => setSearch(e.target.value)}/>
-                <div onClick={handleSearch} className={`bg-white flex items-center justify-center px-4 rounded-tr-lg ${!searchOptions.length > 0 && 'rounded-br-lg'}`}>
+                <input type="text" onBlur={resetSuggestions} className={`w-full p-4 rounded-tl-lg ${(!searchOptions.length > 0 && !isSuggestionsOpen) && 'rounded-bl-lg'} outline-none`} placeholder='Suche nach Fotos oder Videos...' value={search} onChange={(e) => setSearch(e.target.value)}/>
+                <div onClick={handleSearch} className={`bg-white flex items-center justify-center px-4 rounded-tr-lg ${(!searchOptions.length > 0 && !isSuggestionsOpen) ? 'rounded-br-lg' : ''}`}>
                     <BsSearch className='text-xl'/>
                 </div>
                 {
-                    searchOptions.length > 0 && <div className='sm:w-[40rem] w-[100%] bg-white rounded-bl-lg rounded-br-lg absolute top-[3.5rem] shadow-l overflow-hidden'>
+                    searchOptions.length > 0 && isSuggestionsOpen && <div className='sm:w-[40rem] w-[100%] bg-white rounded-bl-lg rounded-br-lg absolute top-[3.5rem] shadow-lg overflow-hidden'>
                         {
 
                             searchOptions.map((item, index) => {
