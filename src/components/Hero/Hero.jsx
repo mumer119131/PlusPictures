@@ -43,11 +43,11 @@ const Hero = () => {
                     <BsSearch className='text-xl'/>
                 </div>
                 {
-                    searchOptions.length > 0 && <div className='sm:w-[40rem] w-[100%] bg-white rounded-bl-lg rounded-br-lg absolute top-[3.5rem] shadow-lg'>
+                    searchOptions.length > 0 && <div className='sm:w-[40rem] w-[100%] bg-white rounded-bl-lg rounded-br-lg absolute top-[3.5rem] shadow-l overflow-hidden'>
                         {
 
                             searchOptions.map((item, index) => {
-                                return <Link to={`/search/${item}`} className='w-full mt-2 block capitalize py-4 px-4' key={index}>{item}</Link>
+                                return <Link to={`/search/${item}`} className='w-full mt-2 block capitalize py-4 px-4 hover:bg-primary hover:bg-opacity-50' key={index}>{item}</Link>
                             })
                         }
                     </div>
