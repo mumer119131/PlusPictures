@@ -33,8 +33,10 @@ const Hero = () => {
         }
       },[search])
     const resetSuggestions = () =>{
-        setSearchOptions([])
-        setIsSuggestionsOpen(false)
+        setTimeout(()=>{
+            setSearchOptions([])
+            setIsSuggestionsOpen(false)
+        },1000)
     }
   return (
     <div className='h-[50rem] relative w-full'>
