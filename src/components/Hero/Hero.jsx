@@ -2,8 +2,7 @@ import React, { useEffect } from 'react'
 import HeroImage from '../../assets/hero.jpg'
 import {BsSearch} from 'react-icons/bs'
 import { Link, useNavigate } from 'react-router-dom'
-import { commonWords } from '../../utils/commonWords'
-
+import jsonp from 'jsonp';
 
 const Hero = () => {
     const [popular, setPopular] = React.useState(['People', 'Nature', 'Business & Work', 'Architecture','Food & Drink', 'Animals', 'Art & Culture'])
@@ -16,17 +15,30 @@ const Hero = () => {
         if (search == null || search.trim() === '') return
         navigate(`/search/${search}`)
     }
-
+    
+    function makeRequest(query) {
+        const url = `http://suggestqueries.google.com/complete/search?client=firefox&q=${query}`;
+        jsonp(url, null, (err, data) => {
+          if (err) {
+            console.error(err);
+          } else {
+            setSearchOptions(data[1].length > 5 ? data[1].slice(0,5) : data[1])
+          }
+        });
+      }
+    const getSuggestions = async () => {
+        setIsSuggestionsOpen(true)
+        makeRequest(search);
+    }
+    useEffect(()=>{
+        console.log(searchOptions)
+    }, [searchOptions])
       useEffect(()=>{
         // filter from commonWords and set to setSearchOptions
         if (search){
-            
+            getSuggestions()
             // filter such that the search term is at the start of the word
-            const filtered = commonWords.filter((item) => {
-                return item.toLowerCase().startsWith(search.toLowerCase())
-            })
-            setIsSuggestionsOpen(true)
-            filtered.length > 5 ? setSearchOptions(filtered.slice(0, 5)) : setSearchOptions(filtered)
+            
         }else{
             setSearchOptions([])
             setIsSuggestionsOpen(false)
