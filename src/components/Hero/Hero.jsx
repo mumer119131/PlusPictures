@@ -17,7 +17,7 @@ const Hero = () => {
     }
     
     function makeRequest(query) {
-        const url = `http://suggestqueries.google.com/complete/search?client=firefox&q=${query}`;
+        const url = `https://suggestqueries.google.com/complete/search?client=firefox&q=${query}`;
         jsonp(url, null, (err, data) => {
           if (err) {
             console.error(err);
