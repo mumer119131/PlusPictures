@@ -1,0 +1,8 @@
+version: "3"
+services:
+  web:
+    image: mumer119131/pluspictures:pluspictures
+    container_name: plusPicturesContainer
+    build: .
+    ports :
+      - 3000:80
